@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SoundScapeApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+55f4de32849b7888a4b3ead6121877220fb7178e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a7c34d895cd805e2f377910b2f41a5899b3432fe")]
 [assembly: System.Reflection.AssemblyProductAttribute("SoundScapeApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SoundScapeApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

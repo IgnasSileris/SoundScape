@@ -7,15 +7,35 @@ import {
   IconUser
 } from '@tabler/icons-react'
 import NavElement from './NavElement'
+import {
+  accountRoute,
+  dashboardRoute,
+  helpRoute,
+  micAndFiltersRoute,
+  settingsRoute,
+  testAndCompareRoute
+} from '../app/router'
 
 export default function NavBar() {
   const navSections = [
-    { name: 'Dashboard', icon: IconDashboard },
-    { name: 'Mic & Filters', icon: IconMicrophone },
-    { name: 'Test & Compare', icon: IconInfoCircle },
-    { name: 'Account', icon: IconUser },
-    { name: 'Settings', icon: IconSettings },
-    { name: 'Help', icon: IconHelp }
+    {
+      name: 'Dashboard',
+      icon: IconDashboard,
+      route: dashboardRoute
+    },
+    {
+      name: 'Mic & Filters',
+      icon: IconMicrophone,
+      route: micAndFiltersRoute
+    },
+    {
+      name: 'Test & Compare',
+      icon: IconInfoCircle,
+      route: testAndCompareRoute
+    },
+    { name: 'Account', icon: IconUser, route: accountRoute },
+    { name: 'Settings', icon: IconSettings, route: settingsRoute },
+    { name: 'Help', icon: IconHelp, route: helpRoute }
   ]
 
   return (
@@ -25,6 +45,7 @@ export default function NavBar() {
           <NavElement
             key={section.name}
             title={section.name}
+            route={section.route}
             Icon={section.icon}
           />
         ))}
