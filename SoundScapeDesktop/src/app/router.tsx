@@ -1,7 +1,8 @@
 import {
   createRootRoute,
   createRoute,
-  createRouter
+  createRouter,
+  redirect
 } from '@tanstack/react-router'
 import MainPage from '../pages/MainPage'
 import DashboardPage from '../pages/DashboardPage'
@@ -18,7 +19,9 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: DashboardPage
+  beforeLoad: () => {
+    throw redirect({ to: '/dashboard' })
+  }
 })
 
 export const dashboardRoute = createRoute({
