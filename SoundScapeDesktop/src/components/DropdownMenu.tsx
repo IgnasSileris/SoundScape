@@ -21,7 +21,7 @@ export function DropdownMenu({
 }: DropdownProps) {
   return (
     <Select onValueChange={onChange}>
-      <SelectTrigger className="w-full border-0 border-none bg-blue-900/15 p-6 text-xl font-medium !text-white focus:!ring-0">
+      <SelectTrigger className="!focus:ring-0 w-full border-0 border-none bg-blue-900/15 p-6 text-xl font-medium text-white!">
         <SelectValue placeholder={label} value={currentValue} />
       </SelectTrigger>
       <SelectContent className="border-none bg-slate-900 text-xl">

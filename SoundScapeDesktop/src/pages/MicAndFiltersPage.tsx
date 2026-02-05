@@ -11,11 +11,11 @@ export default function MicAndFiltersPage() {
   const [selectedMic, setSelectedMic] = useState<string | undefined>(undefined)
   return (
     <div className="flex h-full w-full flex-col items-start gap-4 p-[12%] text-white">
-      <h1 className="!text-4xl">Microphone</h1>
+      <h1 className="text-4xl!">Microphone</h1>
       <span></span>
       <div className="flex w-full flex-col items-start gap-6">
         <div className="flex w-full flex-col items-start gap-5">
-          <h2 className="!text-2xl font-light">Microphone</h2>
+          <h2 className="text-2xl! font-light">Microphone</h2>
           <DropdownMenu
             label="Select a microphone..."
             options={['Mic1', 'Mic2']}
@@ -24,7 +24,7 @@ export default function MicAndFiltersPage() {
           />
         </div>
         <div className="flex w-full flex-col items-start gap-5">
-          <h2 className="!text-2xl font-light">Filter</h2>
+          <h2 className="text-2xl! font-light">Filter</h2>
           <DropdownMenu
             label="Select a filter..."
             options={FILTERS}
