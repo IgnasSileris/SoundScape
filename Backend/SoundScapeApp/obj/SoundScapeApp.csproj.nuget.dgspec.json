@@ -47,6 +47,10 @@
             "ElectronNET.API": {
               "target": "Package",
               "version": "[23.6.2, )"
+            },
+            "PortAudioSharp2": {
+              "target": "Package",
+              "version": "[1.0.6, )"
             }
           },
           "imports": [

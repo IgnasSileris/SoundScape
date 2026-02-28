@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "gb2gz5Mm+zE=",
+  "dgSpecHash": "lBJ6+Muh9yw=",
   "success": true,
   "projectFilePath": "C:\\Users\\ignas\\Documents\\Programming\\SoundScape\\Backend\\SoundScapeApp\\SoundScapeApp.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,12 @@
     "C:\\Users\\ignas\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\ignas\\.nuget\\packages\\microsoft.win32.systemevents\\7.0.0\\microsoft.win32.systemevents.7.0.0.nupkg.sha512",
     "C:\\Users\\ignas\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\ignas\\.nuget\\packages\\org.k2fsa.portaudio.runtime.linux-aarch64\\1.0.6\\org.k2fsa.portaudio.runtime.linux-aarch64.1.0.6.nupkg.sha512",
+    "C:\\Users\\ignas\\.nuget\\packages\\org.k2fsa.portaudio.runtime.linux-x64\\1.0.6\\org.k2fsa.portaudio.runtime.linux-x64.1.0.6.nupkg.sha512",
+    "C:\\Users\\ignas\\.nuget\\packages\\org.k2fsa.portaudio.runtime.osx-arm64\\1.0.6\\org.k2fsa.portaudio.runtime.osx-arm64.1.0.6.nupkg.sha512",
+    "C:\\Users\\ignas\\.nuget\\packages\\org.k2fsa.portaudio.runtime.osx-x64\\1.0.6\\org.k2fsa.portaudio.runtime.osx-x64.1.0.6.nupkg.sha512",
+    "C:\\Users\\ignas\\.nuget\\packages\\org.k2fsa.portaudio.runtime.win-x64\\1.0.6\\org.k2fsa.portaudio.runtime.win-x64.1.0.6.nupkg.sha512",
+    "C:\\Users\\ignas\\.nuget\\packages\\portaudiosharp2\\1.0.6\\portaudiosharp2.1.0.6.nupkg.sha512",
     "C:\\Users\\ignas\\.nuget\\packages\\socketioclient\\3.0.8\\socketioclient.3.0.8.nupkg.sha512",
     "C:\\Users\\ignas\\.nuget\\packages\\socketioclient.newtonsoft.json\\3.0.7\\socketioclient.newtonsoft.json.3.0.7.nupkg.sha512",
     "C:\\Users\\ignas\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
