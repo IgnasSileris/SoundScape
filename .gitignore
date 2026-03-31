@@ -61,3 +61,5 @@ electron.manifest.json
 # ----------------------------
 Thumbs.db
 Desktop.ini
+
+main.cs

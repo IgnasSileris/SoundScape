@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="ElectronNET.API" Version="23.6.2" />
+    <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="PortAudioSharp2" Version="1.0.6" />
   </ItemGroup>
 

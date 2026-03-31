@@ -7,6 +7,9 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+var audioIngester = new SoundScapeApp.Services.AudioIngester();
+audioIngester.GetMicOptions();
+
 if (HybridSupport.IsElectronActive)
 {
     var options = new ElectronNET.API.Entities.BrowserWindowOptions

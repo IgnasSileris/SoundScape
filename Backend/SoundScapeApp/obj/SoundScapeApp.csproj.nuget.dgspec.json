@@ -48,6 +48,10 @@
               "target": "Package",
               "version": "[23.6.2, )"
             },
+            "NAudio": {
+              "target": "Package",
+              "version": "[2.3.0, )"
+            },
             "PortAudioSharp2": {
               "target": "Package",
               "version": "[1.0.6, )"

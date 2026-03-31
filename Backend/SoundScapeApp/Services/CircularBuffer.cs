@@ -1,3 +1,5 @@
+namespace SoundScapeApp.Services;
+
 public class CircularBuffer
 {
     private const int Capacity = 10;
@@ -21,7 +23,7 @@ public class CircularBuffer
     public bool Read(ref byte byteToReadTo)
     {
         if (_readIndex == _writeIndex)
-        {   
+        {
             // buffer is empty
             return false;
         }
