@@ -4,25 +4,80 @@ namespace SoundScapeApp.Services;
 
 public class AudioStateService
 {
-    public string? CustomDeviceName { get; set; }
-    public string? InputDeviceId { get; set; }
-    public string? OutputDeviceId { get; set; }
+    public event Action<string?>? OnInputDeviceChanged;
+    public event Action<string?>? OnOutputDeviceChanged;
+    public event Action<List<string>>? OnActiveFiltersChanged;
 
-    public List<string> ActiveFilterIds { get; set; } = [];
+    public string? CustomDeviceName
+    {
+        get;
+        set
+        {
+            if (field == value)
+            {
+                return;
+            }
 
-    private List<DeviceOption> inputDevices = [];
-    private List<DeviceOption> outputDevices = [];
-    public IReadOnlyList<DeviceOption> AvailableInputDevices => inputDevices;
-    public IReadOnlyList<DeviceOption> AvailableOutputDevices => outputDevices;
+            field = value;
+        }
+    }
+
+    public string? InputDeviceId
+    {
+        get;
+        set
+        {
+            if (field == value)
+            {
+                return;
+            }
+
+            field = value;
+            OnInputDeviceChanged?.Invoke(value);
+        }
+    }
+
+    public string? OutputDeviceId
+    {
+        get;
+        set
+        {
+            if (field == value)
+            {
+                return;
+            }
+
+            field = value;
+            OnOutputDeviceChanged?.Invoke(value);
+        }
+    }
+
+    public List<string> ActiveFilterIds
+    {
+        get;
+        set
+        {
+            if (field.SequenceEqual(value))
+            {
+                return;
+            }
+
+            field = value;
+            OnActiveFiltersChanged?.Invoke(value);
+        }
+    } = [];
+
+    public IReadOnlyList<DeviceOption> AvailableInputDevices { get; private set; } = [];
+    public IReadOnlyList<DeviceOption> AvailableOutputDevices { get; private set; } = [];
 
     public void SetInputDevices(List<DeviceOption> _inputDevices)
     {
-        inputDevices = _inputDevices;
+        AvailableInputDevices = _inputDevices;
     }
 
     public void SetOutputDevices(List<DeviceOption> _outputDevices)
     {
-        outputDevices = _outputDevices;
+        AvailableOutputDevices = _outputDevices;
     }
 
 }
