@@ -7,9 +7,18 @@ namespace SoundScapeApp.Services;
 
 public class DeviceService
 {
+    private readonly AudioStateService state;
+
+    public DeviceService(AudioStateService _state)
+    {
+        state = _state;
+
+        PortAudio.Initialize();
+    }
+
     public List<DeviceOptionDto> GetInputMicOptions()
     {
-        List<DeviceOptionDto> micOptions = [];
+        List<DeviceOption> devices = [];
         for (int i = 0; i < PortAudio.DeviceCount; i++)
         {
             var deviceInfo = PortAudio.GetDeviceInfo(i);
@@ -18,21 +27,28 @@ public class DeviceService
 
             if (deviceInfo.maxInputChannels > 0 && deviceInfo.hostApi == 1 && !isVirtualMic)
             {
-                micOptions.Add(
-                    new DeviceOptionDto
+                devices.Add(
+                    new DeviceOption
                     {
-                        Id = $"{deviceInfo.hostApi}:{deviceInfo.name}   ",
-                        Label = $"{deviceInfo.name}"
+                        Id = $"{deviceInfo.hostApi}:{deviceInfo.name}:{deviceInfo.defaultSampleRate}",
+                        Label = $"{deviceInfo.name}",
+                        PortAudioIndex = i
                     });
             }
         }
 
-        return micOptions;
+        state.SetInputDevices(devices);
+
+        return [.. devices.Select(d => new DeviceOptionDto
+        {
+            Id = d.Id,
+            Label = d.Label
+        })];
     }
 
     public List<DeviceOptionDto> GetOutputMicOptions()
     {
-        List<DeviceOptionDto> micOptions = [];
+        List<DeviceOption> devices = [];
         for (int i = 0; i < PortAudio.DeviceCount; i++)
         {
             var deviceInfo = PortAudio.GetDeviceInfo(i);
@@ -41,15 +57,22 @@ public class DeviceService
 
             if (deviceInfo.maxInputChannels > 0 && deviceInfo.hostApi == 1 && isVirtualMic)
             {
-                micOptions.Add(
-                    new DeviceOptionDto
+                devices.Add(
+                    new DeviceOption
                     {
-                        Id = $"{deviceInfo.hostApi}:{deviceInfo.name}   ",
-                        Label = $"{deviceInfo.name}"
+                        Id = $"{deviceInfo.hostApi}:{deviceInfo.name}:{deviceInfo.defaultSampleRate}",
+                        Label = $"{deviceInfo.name}",
+                        PortAudioIndex = i
                     });
             }
         }
 
-        return micOptions;
+        state.SetOutputDevices(devices);
+
+        return [.. devices.Select(d => new DeviceOptionDto
+        {
+            Id = d.Id,
+            Label = d.Label
+        })];
     }
 }

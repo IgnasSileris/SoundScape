@@ -1,16 +1,15 @@
-using System.Runtime.Versioning;
 using PortAudioSharp;
 
 namespace SoundScapeApp.Services;
 
 public class AudioIngester
 {
-    private CircularBuffer _circularBuffer;
+    private CircularBuffer circularBuffer;
     private readonly AudioStateService state;
 
-    public AudioIngester(AudioStateService _state)
+    public AudioIngester(AudioStateService _state, CircularBuffer _buffer)
     {
-        _circularBuffer = new CircularBuffer();
+        circularBuffer = _buffer;
         state = _state;
 
         PortAudio.Initialize();
