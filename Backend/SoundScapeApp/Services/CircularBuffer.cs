@@ -17,6 +17,7 @@ public class CircularBuffer
 
         _buffer[_writeIndex] = byteToWrite;
         _writeIndex = (_writeIndex + 1) % Capacity;
+
         return true;
     }
 
@@ -30,6 +31,7 @@ public class CircularBuffer
 
         byteToReadTo = _buffer[_readIndex];
         _readIndex = (_readIndex + 1) % Capacity;
+
         return true;
     }
 }

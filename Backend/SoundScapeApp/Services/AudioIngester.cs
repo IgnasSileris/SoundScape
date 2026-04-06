@@ -4,7 +4,7 @@ namespace SoundScapeApp.Services;
 
 public class AudioIngester
 {
-    private CircularBuffer circularBuffer;
+    private readonly CircularBuffer circularBuffer;
     private readonly AudioStateService state;
 
     public AudioIngester(AudioStateService _state, CircularBuffer _buffer)
@@ -14,5 +14,7 @@ public class AudioIngester
 
         PortAudio.Initialize();
     }
+
+
 
 }
