@@ -1,9 +1,8 @@
 using ElectronNET.API;
 
-var builder = WebApplication.CreateBuilder(args);
+using SoundScapeApp.Services;
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
@@ -15,6 +14,7 @@ if (HybridSupport.IsElectronActive)
         Height = 800
     };
     await Electron.WindowManager.CreateWindowAsync(options);
+
 }
 
 // Configure the HTTP request pipeline.

@@ -4,9 +4,25 @@ namespace SoundScapeApp.Services;
 
 public class AudioStateService
 {
+    public event Action<bool>? OnIsActiveChanged;
     public event Action<string?>? OnInputDeviceChanged;
     public event Action<string?>? OnOutputDeviceChanged;
     public event Action<List<string>>? OnActiveFiltersChanged;
+
+    public bool IsActive
+    {
+        get;
+        set
+        {
+            if (field == value)
+            {
+                return;
+            }
+
+            field = value;
+            OnIsActiveChanged?.Invoke(value);
+        }
+    } = false;
 
     public string? CustomDeviceName
     {
@@ -78,6 +94,30 @@ public class AudioStateService
     public void SetOutputDevices(List<DeviceOption> _outputDevices)
     {
         AvailableOutputDevices = _outputDevices;
+    }
+
+    public int GetInputPortAudioIndex()
+    {
+        var device = AvailableInputDevices.FirstOrDefault(d => d.Id == InputDeviceId);
+
+        if (device == null)
+        {
+            return -1;
+        }
+
+        return device.PortAudioIndex;
+    }
+
+    public int GetOutputPortAudioIndex()
+    {
+        var device = AvailableOutputDevices.FirstOrDefault(d => d.Id == OutputDeviceId);
+
+        if (device == null)
+        {
+            return -1;
+        }
+
+        return device.PortAudioIndex;
     }
 
 }

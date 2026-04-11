@@ -9,12 +9,18 @@ public class AudioStateControlService
         state = _state;
     }
 
-    public void UpdateDeviceState(string newCustomName, string newInputDeviceId, string newOutputDeviceId, List<string> newActiveFilterIds)
+    public void UpdateDeviceState(bool newIsActive, string newCustomName, string newInputDeviceId, string newOutputDeviceId, List<string> newActiveFilterIds)
     {
+        UpdateIsActiveStatus(newIsActive);
         UpdateDeviceCustomName(newCustomName);
         UpdateInputDeviceId(newInputDeviceId);
         UpdateOutputDeviceId(newOutputDeviceId);
         UpdateActiveFilterIds(newActiveFilterIds);
+    }
+
+    public void UpdateIsActiveStatus(bool newIsActive)
+    {
+        state.IsActive = newIsActive;
     }
 
     public void UpdateDeviceCustomName(string newCustomName)
