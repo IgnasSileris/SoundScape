@@ -5,29 +5,24 @@ using PortAudioSharp;
 
 namespace SoundScapeApp.Services;
 
-public class AudioIngestionService(AudioStateService _state, CircularBuffer _buffer) : BackgroundService
+public class AudioIngestionService(AudioStateService _state, CircularBuffer<float> _buffer) : BackgroundService
 {
-    private readonly CircularBuffer circularBuffer = _buffer;
+    private readonly CircularBuffer<float> circularBuffer = _buffer;
     private readonly AudioStateService state = _state;
 
     private PortAudioSharp.Stream? stream;
     private Lock _lock = new();
 
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         PortAudio.Initialize();
 
-        // TODO: event ordering logic (double starting, double stopping)
         state.OnIsActiveChanged += OnIsActiveChangedHandler;
         state.OnInputDeviceChanged += OnInputDeviceChangedHandler;
 
         try
         {
-            if (state.IsActive)
-            {
-                StartStream();
-            }
+            EvaluateState();
 
             await Task.Delay(Timeout.Infinite, stoppingToken);
         }
@@ -43,17 +38,19 @@ public class AudioIngestionService(AudioStateService _state, CircularBuffer _buf
 
     private void StartStream()
     {
-        StopStream();
-
         int deviceIx = state.GetInputPortAudioIndex();
 
         if (deviceIx < 0)
         {
+            // TODO: report back to FE or maybe just return
+            return;
             throw new Exception("No input devices.");
         }
 
         lock (_lock)
         {
+            StopStream();
+
             var param = new StreamParameters
             {
                 channelCount = 1,
@@ -77,6 +74,18 @@ public class AudioIngestionService(AudioStateService _state, CircularBuffer _buf
         Console.WriteLine($"Started new audio stream with {PortAudio.GetDeviceInfo(deviceIx).name}.");
     }
 
+    private unsafe StreamCallbackResult Callback(nint input, nint output, uint frameCount, ref StreamCallbackTimeInfo timeInfo, StreamCallbackFlags statusFlags, nint userData)
+    {
+        if (input != IntPtr.Zero)
+        {
+            var inputSpan = new Span<float>((float*)input, (int)frameCount);
+            circularBuffer.BulkWrite(inputSpan);
+        }
+
+        return StreamCallbackResult.Continue;
+    }
+
+
     private void StopStream()
     {
         lock (_lock)
@@ -93,7 +102,17 @@ public class AudioIngestionService(AudioStateService _state, CircularBuffer _buf
 
     private void OnIsActiveChangedHandler(bool isActive)
     {
-        if (isActive)
+        EvaluateState();
+    }
+
+    private void OnInputDeviceChangedHandler(string? inputDeviceId)
+    {
+        EvaluateState();
+    }
+
+    private void EvaluateState()
+    {
+        if (state.IsActive)
         {
             StartStream();
         }
@@ -101,23 +120,5 @@ public class AudioIngestionService(AudioStateService _state, CircularBuffer _buf
         {
             StopStream();
         }
-
     }
-
-    private void OnInputDeviceChangedHandler(string? inputDeviceId)
-    {
-        if (state.IsActive)
-        {
-            StartStream();
-        }
-    }
-
-    static StreamCallbackResult Callback(nint input, nint output, uint frameCount, ref StreamCallbackTimeInfo timeInfo, StreamCallbackFlags statusFlags, nint userData)
-    {
-        var samples = new float[frameCount];
-        Marshal.Copy(input, samples, 0, (int)frameCount);
-
-        return StreamCallbackResult.Continue;
-    }
-
 }
