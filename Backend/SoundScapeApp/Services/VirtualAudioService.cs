@@ -5,13 +5,14 @@ using PortAudioSharp;
 
 namespace SoundScapeApp.Services;
 
-public class AudioIngestionService(AudioStateService _state, CircularBuffer<float> _buffer) : BackgroundService
+public class VirtualAudioService(AudioStateService _state, CircularBuffer<float> _inputBuffer, CircularBuffer<float> _outputBuffer) : BackgroundService
 {
-    private readonly CircularBuffer<float> circularBuffer = _buffer;
+    private readonly CircularBuffer<float> inputBuffer = _inputBuffer;
+    private readonly CircularBuffer<float> outputBuffer = _outputBuffer;
     private readonly AudioStateService state = _state;
 
     private PortAudioSharp.Stream? stream;
-    private Lock _lock = new();
+    private readonly Lock _lock = new();
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -19,6 +20,7 @@ public class AudioIngestionService(AudioStateService _state, CircularBuffer<floa
 
         state.OnIsActiveChanged += OnIsActiveChangedHandler;
         state.OnInputDeviceChanged += OnInputDeviceChangedHandler;
+        state.OnOutputDeviceChanged += OnOutputDeviceChangedHandler;
 
         try
         {
@@ -30,6 +32,7 @@ public class AudioIngestionService(AudioStateService _state, CircularBuffer<floa
         {
             state.OnIsActiveChanged -= OnIsActiveChangedHandler;
             state.OnInputDeviceChanged -= OnInputDeviceChangedHandler;
+            state.OnOutputDeviceChanged -= OnOutputDeviceChangedHandler;
 
             StopStream();
             PortAudio.Terminate();
@@ -38,30 +41,45 @@ public class AudioIngestionService(AudioStateService _state, CircularBuffer<floa
 
     private void StartStream()
     {
-        int deviceIx = state.GetInputPortAudioIndex();
-
-        if (deviceIx < 0)
+        int inputDeviceIx = state.GetInputPortAudioIndex();
+        if (inputDeviceIx < 0)
         {
             // TODO: report back to FE or maybe just return
             return;
             throw new Exception("No input devices.");
         }
 
+        int outputDeviceIx = state.GetOutputPortAudioIndex();
+        if (outputDeviceIx < 0)
+        {
+            // TODO: report back to FE or maybe just return
+            return;
+            throw new Exception("No output devices.");
+        }
+
         lock (_lock)
         {
             StopStream();
 
-            var param = new StreamParameters
+            var inputParams = new StreamParameters
             {
                 channelCount = 1,
                 sampleFormat = SampleFormat.Float32,
-                suggestedLatency = PortAudio.GetDeviceInfo(deviceIx).defaultHighInputLatency,
+                suggestedLatency = PortAudio.GetDeviceInfo(inputDeviceIx).defaultHighInputLatency,
+                hostApiSpecificStreamInfo = IntPtr.Zero
+            };
+
+            var outputParams = new StreamParameters
+            {
+                channelCount = 1,
+                sampleFormat = SampleFormat.Float32,
+                suggestedLatency = PortAudio.GetDeviceInfo(outputDeviceIx).defaultHighInputLatency,
                 hostApiSpecificStreamInfo = IntPtr.Zero
             };
 
             stream = new PortAudioSharp.Stream(
-                inParams: param,
-                outParams: null,
+                inParams: inputParams,
+                outParams: outputParams,
                 sampleRate: 44100,
                 framesPerBuffer: 0,
                 streamFlags: StreamFlags.ClipOff,
@@ -71,15 +89,18 @@ public class AudioIngestionService(AudioStateService _state, CircularBuffer<floa
             stream.Start();
         }
 
-        Console.WriteLine($"Started new audio stream with {PortAudio.GetDeviceInfo(deviceIx).name}.");
+        Console.WriteLine($"Started new audio stream with input from: {PortAudio.GetDeviceInfo(inputDeviceIx).name} and output to {PortAudio.GetDeviceInfo(outputDeviceIx).name}.");
     }
 
     private unsafe StreamCallbackResult Callback(nint input, nint output, uint frameCount, ref StreamCallbackTimeInfo timeInfo, StreamCallbackFlags statusFlags, nint userData)
     {
-        if (input != IntPtr.Zero)
+        if (input != IntPtr.Zero && output != IntPtr.Zero)
         {
             var inputSpan = new Span<float>((float*)input, (int)frameCount);
-            circularBuffer.BulkWrite(inputSpan);
+            int numWrite = inputBuffer.BulkWrite(inputSpan);
+            // * Async processing in the background with AudioManager * 
+            var outputSpan = new Span<float>((float*)output, (int)frameCount);
+            int numRead = outputBuffer.BulkRead(outputSpan);
         }
 
         return StreamCallbackResult.Continue;
@@ -106,6 +127,11 @@ public class AudioIngestionService(AudioStateService _state, CircularBuffer<floa
     }
 
     private void OnInputDeviceChangedHandler(string? inputDeviceId)
+    {
+        EvaluateState();
+    }
+
+    private void OnOutputDeviceChangedHandler(string? inputDeviceId)
     {
         EvaluateState();
     }
