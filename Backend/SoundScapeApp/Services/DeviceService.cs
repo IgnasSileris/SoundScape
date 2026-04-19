@@ -1,7 +1,7 @@
 using PortAudioSharp;
 
-using SoundScapeApp.Utilities;
 using SoundScapeApp.Libraries.Contracts;
+using SoundScapeApp.Libraries.Utilities;
 
 namespace SoundScapeApp.Services;
 
@@ -55,7 +55,7 @@ public class DeviceService
 
             bool isVirtualMic = Constants.virtualMicNames.Any(deviceInfo.name.Contains);
 
-            if (deviceInfo.maxInputChannels > 0 && deviceInfo.hostApi == 1 && isVirtualMic)
+            if (deviceInfo.maxOutputChannels > 0 && deviceInfo.hostApi == 1 && isVirtualMic)
             {
                 devices.Add(
                     new DeviceOption
