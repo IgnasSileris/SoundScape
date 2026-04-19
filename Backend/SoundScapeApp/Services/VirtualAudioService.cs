@@ -1,3 +1,5 @@
+using SoundScapeApp.Libraries.Utilities;
+
 using Microsoft.Extensions.Hosting;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -13,6 +15,7 @@ public class VirtualAudioService(AudioStateService _state, CircularBuffer<float>
 
     private PortAudioSharp.Stream? stream;
     private readonly Lock _lock = new();
+    private Action? debouncedEvaluateState;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -21,6 +24,7 @@ public class VirtualAudioService(AudioStateService _state, CircularBuffer<float>
         state.OnIsActiveChanged += OnIsActiveChangedHandler;
         state.OnInputDeviceChanged += OnInputDeviceChangedHandler;
         state.OnOutputDeviceChanged += OnOutputDeviceChangedHandler;
+        debouncedEvaluateState = Debouncer.Debounce(EvaluateState, 500);
 
         try
         {
@@ -123,17 +127,17 @@ public class VirtualAudioService(AudioStateService _state, CircularBuffer<float>
 
     private void OnIsActiveChangedHandler(bool isActive)
     {
-        EvaluateState();
+        debouncedEvaluateState?.Invoke();
     }
 
     private void OnInputDeviceChangedHandler(string? inputDeviceId)
     {
-        EvaluateState();
+        debouncedEvaluateState?.Invoke();
     }
 
     private void OnOutputDeviceChangedHandler(string? inputDeviceId)
     {
-        EvaluateState();
+        debouncedEvaluateState?.Invoke();
     }
 
     private void EvaluateState()
