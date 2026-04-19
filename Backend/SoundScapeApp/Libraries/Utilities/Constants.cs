@@ -1,4 +1,4 @@
-namespace SoundScapeApp.Utilities;
+namespace SoundScapeApp.Libraries.Utilities;
 
 static class Constants
 {
