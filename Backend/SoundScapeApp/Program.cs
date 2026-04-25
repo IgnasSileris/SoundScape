@@ -6,13 +6,11 @@ using SoundScapeApp.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // builder.Services.AddControllers();
+builder.WebHost.UseElectron(args);
 
 var app = builder.Build();
 
-if (HybridSupport.IsElectronActive)
-{
-    ElectronBootstrap.Init("http://localhost:5173");
-}
+ElectronBootstrap.Init("http://localhost:5173");
 
 app.UseRouting();
 

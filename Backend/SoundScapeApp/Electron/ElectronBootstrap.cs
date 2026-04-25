@@ -1,24 +1,28 @@
+using ElectronNET.API;
+using ElectronNET.API.Entities;
+
 namespace SoundScapeApp.Electron;
 
 public static class ElectronBootstrap
 {
     public static void Init(string url)
     {
-        ElectronNET.API.Electron.App.Ready += () =>
+        Console.WriteLine("Registering Electron.App.Ready...");
+        ElectronNET.API.Electron.App.Ready += async () =>
         {
-            Task.Run(async () =>
-            {
-                Ipc.IpcRegistration.RegisterIpc();
+            Console.WriteLine("Electron.App.Ready fired");
+            Ipc.IpcRegistration.RegisterIpc();
 
-                await ElectronNET.API.Electron.WindowManager.CreateWindowAsync(
-                    new ElectronNET.API.Entities.BrowserWindowOptions
-                    {
-                        Width = 1200,
-                        Height = 800
-                    },
-                    url
-                );
-            });
+            await ElectronNET.API.Electron.WindowManager.CreateWindowAsync(
+                new BrowserWindowOptions
+                {
+                    Width = 1200,
+                    Height = 800,
+                    Show = true
+                },
+                url
+            );
+            Console.WriteLine("Window created");
         };
     }
 }
