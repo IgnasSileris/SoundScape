@@ -1,0 +1,18 @@
+{
+  "appId": "com.SoundScapeApp.app",
+  "productName": "SoundScapeApp",
+  "copyright": "Copyright 2026",
+  "buildVersion": "1.0.0",
+  "compression": "maximum",
+  "electronVersion": "24.0.0",
+  "extraResources": [
+    {
+      "from": "./bin",
+      "to": "bin",
+      "filter": ["**/*"]
+    }
+  ],
+  "files": [
+    "**/*"
+  ]
+}

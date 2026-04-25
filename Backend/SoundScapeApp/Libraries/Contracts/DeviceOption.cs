@@ -1,6 +1,5 @@
 namespace SoundScapeApp.Libraries.Contracts;
 
-
 public class DeviceOption
 {
     public string Id { get; set; } = default!;
