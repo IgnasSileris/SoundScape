@@ -20,9 +20,9 @@ export function DropdownMenu({
   onChange
 }: DropdownProps) {
   return (
-    <Select onValueChange={onChange}>
+    <Select value={currentValue} onValueChange={onChange}>
       <SelectTrigger className="!focus:ring-0 w-full border-0 border-none bg-blue-900/15 p-6 text-xl font-medium text-white!">
-        <SelectValue placeholder={label} value={currentValue} />
+        <SelectValue placeholder={label} />
       </SelectTrigger>
       <SelectContent className="border-none bg-slate-900 text-xl">
         {options.map((option) => (

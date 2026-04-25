@@ -1,6 +1,7 @@
 import { cn } from '../lib/utils'
 import { Button } from './ui/button'
-import { AnyRoute, useMatchRoute, useNavigate } from '@tanstack/react-router'
+import { useMatchRoute, useNavigate } from '@tanstack/react-router'
+import type { AnyRoute } from '@tanstack/react-router'
 
 export default function NavElement({
   title,
