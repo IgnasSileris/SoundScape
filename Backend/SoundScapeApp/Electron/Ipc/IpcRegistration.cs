@@ -1,10 +1,11 @@
 namespace SoundScapeApp.Electron.Ipc;
 
-public static class IpcRegistration
+public class IpcRegistration(DeviceHandler _deviceHandler)
 {
-    public static void RegisterIpc()
+    private readonly DeviceHandler deviceHandler = _deviceHandler;
+    public void RegisterIpc()
     {
-        // TODO: register all the different handlers
+        deviceHandler.Register();
         return;
     }
 }

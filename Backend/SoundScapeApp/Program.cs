@@ -1,17 +1,32 @@
 using ElectronNET;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using SoundScapeApp.Services;
+using SoundScapeApp.Electron.Ipc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // builder.Services.AddControllers();
+
+//Services
+builder.Services.AddSingleton<DeviceService>();
+
+// IPC handlers
+builder.Services.AddSingleton<IpcRegistration>();
+builder.Services.AddSingleton<DeviceHandler>();
+builder.Services.AddSingleton<ConfigHandler>();
+
 builder.Services.AddElectron();
+
+var app = builder.Build();
+
 builder.UseElectron(
     args,
     async () =>
     {
-        SoundScapeApp.Electron.Ipc.IpcRegistration.RegisterIpc();
+        var ipcRegistration = app.Services.GetRequiredService<IpcRegistration>();
+        ipcRegistration.RegisterIpc();
 
         var browserWindow = await Electron.WindowManager.CreateWindowAsync(
             new BrowserWindowOptions
@@ -34,7 +49,7 @@ builder.UseElectron(
     }
 );
 
-var app = builder.Build();
+
 
 app.UseRouting();
 
