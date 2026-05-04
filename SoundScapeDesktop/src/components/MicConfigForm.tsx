@@ -1,19 +1,8 @@
 import { CircleHelp } from 'lucide-react'
-import type { FilterOption, MicConfigDraft, MicDeviceOption } from '../types'
+import type { FilterOption, MicConfigDraft } from '../types'
 import { DropdownMenu } from './DropdownMenu'
 import { Button } from './ui/button'
-
-const INPUT_MIC_OPTIONS: MicDeviceOption[] = [
-  { id: 'shure-mv7', name: 'Shure MV7' },
-  { id: 'rode-nt-usb', name: 'Rode NT-USB' },
-  { id: 'focusrite-solo', name: 'Focusrite Solo Input' }
-]
-
-const OUTPUT_MIC_OPTIONS: MicDeviceOption[] = [
-  { id: 'obs-virtual', name: 'OBS Virtual Output' },
-  { id: 'discord-virtual', name: 'Discord Virtual Mic' },
-  { id: 'system-default', name: 'System Default Output' }
-]
+import { useInputMics, useOutputMics } from '../hooks/useDevices'
 
 const FILTER_OPTIONS: FilterOption[] = [
   { id: 'noise-reduction', name: 'Noise Reduction' },
@@ -47,6 +36,9 @@ const MicConfigForm = ({
   onConfigChange,
   onSave
 }: MicConfigFormProps) => {
+  const { data: inputMics = [] } = useInputMics()
+  const { data: outputMics = [] } = useOutputMics()
+
   const isSaveDisabled =
     config.name.trim().length === 0 || !config.inputMicId || !config.outputMicId
 
@@ -59,13 +51,12 @@ const MicConfigForm = ({
         />
         <DropdownMenu
           label="Select an input microphone..."
-          options={INPUT_MIC_OPTIONS.map((option) => ({
+          options={inputMics.map((option) => ({
             value: option.id,
             label: option.name
           }))}
           currentValue={
-            INPUT_MIC_OPTIONS.find((option) => option.id === config.inputMicId)
-              ?.id
+            inputMics.find((option) => option.id === config.inputMicId)?.id
           }
           onChange={(value) => onConfigChange({ inputMicId: value })}
         />
@@ -78,14 +69,12 @@ const MicConfigForm = ({
         />
         <DropdownMenu
           label="Select an output microphone..."
-          options={OUTPUT_MIC_OPTIONS.map((option) => ({
+          options={outputMics.map((option) => ({
             value: option.id,
             label: option.name
           }))}
           currentValue={
-            OUTPUT_MIC_OPTIONS.find(
-              (option) => option.id === config.outputMicId
-            )?.id
+            outputMics.find((option) => option.id === config.outputMicId)?.id
           }
           onChange={(value) => onConfigChange({ outputMicId: value })}
         />
