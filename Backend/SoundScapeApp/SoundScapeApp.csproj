@@ -12,4 +12,11 @@
     <PackageReference Include="ElectronNET.Core.AspNet" Version="0.4.1" />
     <PackageReference Include="PortAudioSharp2" Version="1.0.6" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Electron\dist\preload.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <TargetPath>electron\preload.js</TargetPath>
+    </None>
+  </ItemGroup>
 </Project>

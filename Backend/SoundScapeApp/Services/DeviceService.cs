@@ -31,7 +31,7 @@ public class DeviceService
                     new DeviceOption
                     {
                         Id = $"{deviceInfo.hostApi}:{deviceInfo.name}:{deviceInfo.defaultSampleRate}",
-                        Label = $"{deviceInfo.name}",
+                        Name = $"{deviceInfo.name}",
                         PortAudioIndex = i
                     });
             }
@@ -42,7 +42,7 @@ public class DeviceService
         return [.. devices.Select(d => new DeviceOptionDto
         {
             Id = d.Id,
-            Label = d.Label
+            Name = d.Name
         })];
     }
 
@@ -61,7 +61,7 @@ public class DeviceService
                     new DeviceOption
                     {
                         Id = $"{deviceInfo.hostApi}:{deviceInfo.name}:{deviceInfo.defaultSampleRate}",
-                        Label = $"{deviceInfo.name}",
+                        Name = $"{deviceInfo.name}",
                         PortAudioIndex = i
                     });
             }
@@ -72,7 +72,7 @@ public class DeviceService
         return [.. devices.Select(d => new DeviceOptionDto
         {
             Id = d.Id,
-            Label = d.Label
+            Name = d.Name
         })];
     }
 }

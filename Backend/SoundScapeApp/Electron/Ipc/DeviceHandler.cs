@@ -14,7 +14,7 @@ public class DeviceHandler(DeviceService _deviceService)
 
         ElectronNET.API.Electron.IpcMain.Handle("devices:get-output-mics", _ =>
         {
-            return deviceService.GetInputMicOptions();
+            return deviceService.GetOutputMicOptions();
         });
     }
 }

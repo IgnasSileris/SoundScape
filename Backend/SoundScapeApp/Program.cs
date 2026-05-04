@@ -6,10 +6,12 @@ using SoundScapeApp.Services;
 using SoundScapeApp.Electron.Ipc;
 
 var builder = WebApplication.CreateBuilder(args);
+var preloadPath = Path.Combine(AppContext.BaseDirectory, "electron", "preload.js");
 
 // builder.Services.AddControllers();
 
 //Services
+builder.Services.AddSingleton<AudioStateService>();
 builder.Services.AddSingleton<DeviceService>();
 
 // IPC handlers
@@ -19,13 +21,13 @@ builder.Services.AddSingleton<ConfigHandler>();
 
 builder.Services.AddElectron();
 
-var app = builder.Build();
+WebApplication? app = null;
 
 builder.UseElectron(
     args,
     async () =>
     {
-        var ipcRegistration = app.Services.GetRequiredService<IpcRegistration>();
+        var ipcRegistration = app!.Services.GetRequiredService<IpcRegistration>();
         ipcRegistration.RegisterIpc();
 
         var browserWindow = await Electron.WindowManager.CreateWindowAsync(
@@ -36,10 +38,11 @@ builder.UseElectron(
                 Show = true,
                 WebPreferences = new WebPreferences
                 {
-                    ContextIsolation = false,
+                    ContextIsolation = true,
                     NodeIntegration = false,
                     WebSecurity = false,
-                    AllowRunningInsecureContent = true
+                    AllowRunningInsecureContent = true,
+                    Preload = preloadPath
                 }
             },
             "http://localhost:5173"
@@ -49,7 +52,7 @@ builder.UseElectron(
     }
 );
 
-
+app = builder.Build();
 
 app.UseRouting();
 

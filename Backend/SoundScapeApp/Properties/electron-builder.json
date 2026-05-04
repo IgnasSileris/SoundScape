@@ -4,7 +4,7 @@
   "copyright": "Copyright 2026",
   "buildVersion": "1.0.0",
   "compression": "maximum",
-  "electronVersion": "24.0.0",
+  "electronVersion": "23.2.0",
   "extraResources": [
     {
       "from": "./bin",

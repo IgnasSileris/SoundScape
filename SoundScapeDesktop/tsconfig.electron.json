@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "electron": ["../Backend/SoundScapeApp/obj/Host/node_modules/electron/electron.d.ts"]
+    },
+    "outDir": "../Backend/SoundScapeApp/Electron/dist",
+    "rootDir": "./electron",
+    "types": ["node"]
+  },
+  "include": ["./electron/preload.ts"]
+}

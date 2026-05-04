@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:electron": "tsc -p tsconfig.electron.json",
     "lint": "eslint .",
     "preview": "vite preview",
     "check": "tsc --noEmit"
