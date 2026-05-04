@@ -6,7 +6,7 @@ using SoundScapeApp.Services;
 using SoundScapeApp.Electron.Ipc;
 
 var builder = WebApplication.CreateBuilder(args);
-var preloadPath = Path.Combine(AppContext.BaseDirectory, "electron", "preload.js");
+var preloadPath = Path.Combine(AppContext.BaseDirectory, "electron", "preload.cjs");
 
 // builder.Services.AddControllers();
 

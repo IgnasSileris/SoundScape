@@ -13,10 +13,10 @@
     <PackageReference Include="PortAudioSharp2" Version="1.0.6" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Electron\dist\preload.js">
+    <None Include="Electron\dist\preload.cjs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <TargetPath>electron\preload.js</TargetPath>
+      <TargetPath>electron\preload.cjs</TargetPath>
     </None>
   </ItemGroup>
 </Project>
