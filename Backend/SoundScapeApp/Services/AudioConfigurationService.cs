@@ -1,17 +1,19 @@
 namespace SoundScapeApp.Services;
 
-public class AudioStateControlService
+public class AudioConfigurationService
 {
     private readonly AudioStateService state;
 
-    public AudioStateControlService(AudioStateService _state)
+    public AudioConfigurationService(AudioStateService _state)
     {
         state = _state;
     }
-
-    public void UpdateDeviceState(bool newIsActive, string newCustomName, string newInputDeviceId, string newOutputDeviceId, List<string> newActiveFilterIds)
+    // TODO: update active state vs update existing state
+    // TODO: better approach: receive IsActiveStatus and ActiveCustomId status and then update active state based on Config manager. 
+    public void UpdateDeviceState(bool newIsActive, string newCustomId, string newCustomName, string newInputDeviceId, string newOutputDeviceId, List<string> newActiveFilterIds)
     {
         UpdateIsActiveStatus(newIsActive);
+        UpdateCustomId(newCustomId);
         UpdateDeviceCustomName(newCustomName);
         UpdateInputDeviceId(newInputDeviceId);
         UpdateOutputDeviceId(newOutputDeviceId);
@@ -21,6 +23,11 @@ public class AudioStateControlService
     public void UpdateIsActiveStatus(bool newIsActive)
     {
         state.IsActive = newIsActive;
+    }
+
+    public void UpdateCustomId(string newCustomId)
+    {
+        state.CustomId = newCustomId;
     }
 
     public void UpdateDeviceCustomName(string newCustomName)
