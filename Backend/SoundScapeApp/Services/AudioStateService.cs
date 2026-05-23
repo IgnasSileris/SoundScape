@@ -9,82 +9,45 @@ public class AudioStateService
     public event Action<string?>? OnOutputDeviceChanged;
     public event Action<List<string>>? OnActiveFiltersChanged;
 
-    public bool IsActive
-    {
-        get;
-        set
-        {
-            if (field == value)
-            {
-                return;
-            }
+    private AudioState coreState = new();
 
-            field = value;
-            OnIsActiveChanged?.Invoke(value);
-        }
-    } = false;
-
-    public string? CustomDeviceName
-    {
-        get;
-        set
-        {
-            if (field == value)
-            {
-                return;
-            }
-
-            field = value;
-        }
-    }
-
-    public string? InputDeviceId
-    {
-        get;
-        set
-        {
-            if (field == value)
-            {
-                return;
-            }
-
-            field = value;
-            OnInputDeviceChanged?.Invoke(value);
-        }
-    }
-
-    public string? OutputDeviceId
-    {
-        get;
-        set
-        {
-            if (field == value)
-            {
-                return;
-            }
-
-            field = value;
-            OnOutputDeviceChanged?.Invoke(value);
-        }
-    }
-
-    public List<string> ActiveFilterIds
-    {
-        get;
-        set
-        {
-            if (field.SequenceEqual(value))
-            {
-                return;
-            }
-
-            field = value;
-            OnActiveFiltersChanged?.Invoke(value);
-        }
-    } = [];
+    public bool IsActive => coreState.IsActive;
+    public string? SelectedConfigId => coreState.SelectedConfigId;
+    public string? ConfigName => coreState.ConfigName;
+    public string? InputDeviceId => coreState.InputDeviceId;
+    public string? OutputDeviceId => coreState.OutputDeviceId;
+    public List<string> ActiveFilterIds => coreState.ActiveFilterIds;
 
     public IReadOnlyList<DeviceOption> AvailableInputDevices { get; private set; } = [];
     public IReadOnlyList<DeviceOption> AvailableOutputDevices { get; private set; } = [];
+
+    public void SetCoreState(AudioState newCoreState)
+    {
+        bool isActiveChanged = coreState.IsActive != newCoreState.IsActive;
+        bool isInputDeviceChanged = coreState.InputDeviceId != newCoreState.InputDeviceId;
+        bool isOutputDeviceChanged = coreState.OutputDeviceId != newCoreState.OutputDeviceId;
+        bool isActiveFiltersChanged = !coreState.ActiveFilterIds.SequenceEqual(newCoreState.ActiveFilterIds);
+
+        coreState = newCoreState;
+
+        if (isActiveChanged)
+        {
+            OnIsActiveChanged?.Invoke(coreState.IsActive);
+        }
+        if (isInputDeviceChanged)
+        {
+            OnInputDeviceChanged?.Invoke(coreState.InputDeviceId);
+        }
+        if (isOutputDeviceChanged)
+        {
+            OnOutputDeviceChanged?.Invoke(coreState.OutputDeviceId);
+        }
+        if (isActiveFiltersChanged)
+        {
+            OnActiveFiltersChanged?.Invoke(coreState.ActiveFilterIds);
+        }
+
+    }
 
     public void SetInputDevices(List<DeviceOption> _inputDevices)
     {
