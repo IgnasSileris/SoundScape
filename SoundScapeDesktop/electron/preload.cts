@@ -11,5 +11,5 @@ contextBridge.exposeInMainWorld('soundScapeApi', {
   deleteConfig: (payload: any) => ipcRenderer.invoke('config:delete', payload),
 
   updateAudioState: (payload: any) =>
-    ipcRenderer.send('audio-state:update', payload)
+    ipcRenderer.invoke('audio-state:update', payload)
 })
