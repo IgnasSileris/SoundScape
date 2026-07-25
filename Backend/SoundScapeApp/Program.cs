@@ -13,11 +13,13 @@ var preloadPath = Path.Combine(AppContext.BaseDirectory, "electron", "preload.cj
 //Services
 builder.Services.AddSingleton<AudioStateService>();
 builder.Services.AddSingleton<DeviceService>();
+builder.Services.AddSingleton<MicConfigurationManager>();
 
 // IPC handlers
 builder.Services.AddSingleton<IpcRegistration>();
 builder.Services.AddSingleton<DeviceHandler>();
 builder.Services.AddSingleton<ConfigHandler>();
+builder.Services.AddSingleton<AudioStateHandler>();
 
 builder.Services.AddElectron();
 
