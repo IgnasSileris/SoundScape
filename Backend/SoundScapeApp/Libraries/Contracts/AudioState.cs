@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace SoundScapeApp.Libraries.Contracts;
 
 public class AudioState(
@@ -20,9 +18,7 @@ List<string>? activeFilterIds = null)
 
 public class AudioStateUpdateRequest
 {
-    [JsonPropertyName("isActive")]
     public bool IsActive { get; set; }
 
-    [JsonPropertyName("config")]
     public CustomMicConfiguration Config { get; set; } = default!;
 }

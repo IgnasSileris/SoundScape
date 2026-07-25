@@ -10,6 +10,11 @@ public static class IpcJson
         PropertyNameCaseInsensitive = true
     };
 
+    public static string Serialize<T>(T payload)
+    {
+        return JsonSerializer.Serialize(payload, Options);
+    }
+
     public static T? Deserialize<T>(object payload)
     {
         return JsonSerializer.Deserialize<T>(payload.ToString()!, Options);

@@ -8,6 +8,7 @@ public class AudioStateApplicationService(AudioStateService _state)
 
     public void ProcessStateChange(bool isActive, CustomMicConfiguration config)
     {
+        // TODO: make sure config has required fields filled in
         var newState = MapConfigToState(isActive, config);
         state.SetCoreState(newState);
     }

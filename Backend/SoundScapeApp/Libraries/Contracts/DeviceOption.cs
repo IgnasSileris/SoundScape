@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace SoundScapeApp.Libraries.Contracts;
 
 public class DeviceOption
@@ -12,9 +10,7 @@ public class DeviceOption
 
 public class DeviceOptionDto
 {
-    [JsonPropertyName("id")]
     public string Id { get; set; } = default!;
 
-    [JsonPropertyName("name")]
     public string Name { get; set; } = default!;
 }
