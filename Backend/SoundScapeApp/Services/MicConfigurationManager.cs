@@ -1,6 +1,5 @@
 using SoundScapeApp.Libraries.Contracts;
 using SoundScapeApp.Electron.Ipc;
-using System.Text.Json;
 
 namespace SoundScapeApp.Services;
 
