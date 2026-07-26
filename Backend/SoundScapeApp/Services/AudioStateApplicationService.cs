@@ -6,11 +6,17 @@ public class AudioStateApplicationService(AudioStateService _state)
 {
     private readonly AudioStateService state = _state;
 
-    public void ProcessStateChange(bool isActive, CustomMicConfiguration config)
+    public bool ProcessStateChange(bool isActive, CustomMicConfiguration config)
     {
-        // TODO: make sure config has required fields filled in
+        if (!config.ContainsRunnableFields())
+        {
+            Console.WriteLine("Selected config is missing required fields.");
+            return false;
+        }
+
         var newState = MapConfigToState(isActive, config);
         state.SetCoreState(newState);
+        return true;
     }
 
     private static AudioState MapConfigToState(bool isActive, CustomMicConfiguration config)

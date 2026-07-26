@@ -18,9 +18,7 @@ public class AudioStateHandler(AudioStateApplicationService _audioStateApplicati
                 return false;
             }
 
-            audioStateApplicationService.ProcessStateChange(updateRequest.IsActive, updateRequest.Config);
-
-            return true;
+            return audioStateApplicationService.ProcessStateChange(updateRequest.IsActive, updateRequest.Config);
         });
     }
 }
