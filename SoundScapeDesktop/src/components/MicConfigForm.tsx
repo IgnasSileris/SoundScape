@@ -40,7 +40,9 @@ const MicConfigForm = ({
   const { data: outputMics = [] } = useOutputMics()
 
   const isSaveDisabled =
-    config.name.trim().length === 0 || !config.inputMicId || !config.outputMicId
+    config.name.trim().length === 0 ||
+    !config.inputDeviceId ||
+    !config.outputDeviceId
 
   return (
     <div className="flex w-full max-w-[760px] flex-col gap-6">
@@ -56,9 +58,9 @@ const MicConfigForm = ({
             label: option.name
           }))}
           currentValue={
-            inputMics.find((option) => option.id === config.inputMicId)?.id
+            inputMics.find((option) => option.id === config.inputDeviceId)?.id
           }
-          onChange={(value) => onConfigChange({ inputMicId: value })}
+          onChange={(value) => onConfigChange({ inputDeviceId: value })}
         />
       </div>
 
@@ -74,9 +76,9 @@ const MicConfigForm = ({
             label: option.name
           }))}
           currentValue={
-            outputMics.find((option) => option.id === config.outputMicId)?.id
+            outputMics.find((option) => option.id === config.outputDeviceId)?.id
           }
-          onChange={(value) => onConfigChange({ outputMicId: value })}
+          onChange={(value) => onConfigChange({ outputDeviceId: value })}
         />
       </div>
 

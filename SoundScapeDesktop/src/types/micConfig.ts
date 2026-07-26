@@ -13,16 +13,16 @@ export type FilterOption = {
 export type MicConfig = {
   id: MicConfigId
   name: string
-  inputMicId: string
-  outputMicId: string
+  inputDeviceId: string
+  outputDeviceId: string
   reduceBackgroundNoise: boolean
   filterId?: string
 }
 
 export type MicConfigDraft = {
   name: string
-  inputMicId?: string
-  outputMicId?: string
+  inputDeviceId?: string
+  outputDeviceId?: string
   reduceBackgroundNoise: boolean
   filterId?: string
 }

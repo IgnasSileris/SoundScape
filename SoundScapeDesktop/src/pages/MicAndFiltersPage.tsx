@@ -3,32 +3,19 @@ import ConfigSelector from '../components/ConfigSelector'
 import MicConfigForm from '../components/MicConfigForm'
 import Recordbutton from '../components/RecordButton'
 import type { MicConfig, MicConfigDraft } from '../types'
+import {
+  useDeleteMicConfig,
+  useMicConfigs,
+  useSaveMicConfig
+} from '../hooks/useConfigurations'
 
 const NEW_CONFIG_VALUE = 'new'
-
-const INITIAL_SAVED_CONFIGS: MicConfig[] = [
-  {
-    id: 'config-streaming',
-    name: 'Streaming setup',
-    inputMicId: 'shure-mv7',
-    outputMicId: 'obs-virtual',
-    reduceBackgroundNoise: true,
-    filterId: 'noise-reduction'
-  },
-  {
-    id: 'config-meetings',
-    name: 'Meetings',
-    inputMicId: 'rode-nt-usb',
-    outputMicId: 'discord-virtual',
-    reduceBackgroundNoise: false
-  }
-]
 
 const createEmptyDraft = (): MicConfigDraft => {
   return {
     name: 'Untitled configuration',
-    inputMicId: undefined,
-    outputMicId: undefined,
+    inputDeviceId: undefined,
+    outputDeviceId: undefined,
     reduceBackgroundNoise: false,
     filterId: undefined
   }
@@ -37,17 +24,18 @@ const createEmptyDraft = (): MicConfigDraft => {
 const createDraftFromConfig = (config: MicConfig): MicConfigDraft => {
   return {
     name: config.name,
-    inputMicId: config.inputMicId,
-    outputMicId: config.outputMicId,
+    inputDeviceId: config.inputDeviceId,
+    outputDeviceId: config.outputDeviceId,
     reduceBackgroundNoise: config.reduceBackgroundNoise,
     filterId: config.filterId
   }
 }
 
 const MicAndFiltersPage = () => {
-  const [savedConfigs, setSavedConfigs] = useState<MicConfig[]>(
-    INITIAL_SAVED_CONFIGS
-  )
+  const { data: savedConfigs = [] } = useMicConfigs()
+  const saveMicConfig = useSaveMicConfig()
+  const deleteMicConfig = useDeleteMicConfig()
+
   const [selectedConfigId, setSelectedConfigId] = useState<string | undefined>(
     undefined
   )
@@ -86,50 +74,71 @@ const MicAndFiltersPage = () => {
     }))
   }
 
-  const handleSaveConfig = () => {
+  const handleSaveConfig = async () => {
     if (
       currentConfig.name.trim().length === 0 ||
-      !currentConfig.inputMicId ||
-      !currentConfig.outputMicId
+      !currentConfig.inputDeviceId ||
+      !currentConfig.outputDeviceId
     ) {
       return
     }
 
+    let newConfig: MicConfig
+
     if (isCreatingNewConfig) {
-      const newConfig: MicConfig = {
+      newConfig = {
         id: `config-${Date.now()}`,
         name: currentConfig.name.trim(),
-        inputMicId: currentConfig.inputMicId,
-        outputMicId: currentConfig.outputMicId,
+        inputDeviceId: currentConfig.inputDeviceId,
+        outputDeviceId: currentConfig.outputDeviceId,
         reduceBackgroundNoise: currentConfig.reduceBackgroundNoise,
         filterId: currentConfig.filterId
       }
+    } else {
+      if (!selectedConfig) {
+        return
+      }
 
-      setSavedConfigs((currentConfigs) => [...currentConfigs, newConfig])
-      setSelectedConfigId(newConfig.id)
-      setCurrentConfig(createDraftFromConfig(newConfig))
+      newConfig = {
+        id: selectedConfig.id,
+        name: currentConfig.name.trim(),
+        inputDeviceId: currentConfig.inputDeviceId,
+        outputDeviceId: currentConfig.outputDeviceId,
+        reduceBackgroundNoise: currentConfig.reduceBackgroundNoise,
+        filterId: currentConfig.filterId
+      }
+    }
+
+    const isSaved = await saveMicConfig.mutateAsync(newConfig)
+
+    if (!isSaved) {
+      // TODO: error popup
+      return
+    }
+    setSelectedConfigId(newConfig.id)
+    setCurrentConfig(createDraftFromConfig(newConfig))
+  }
+
+  const handleDeleteConfig = async () => {
+    // TODO: add confirm modal
+    if (!selectedConfigId) {
       return
     }
 
-    if (!selectedConfig) {
+    if (isCreatingNewConfig) {
+      setCurrentConfig(createEmptyDraft())
+      setSelectedConfigId(undefined)
       return
     }
 
-    const updatedConfig: MicConfig = {
-      ...selectedConfig,
-      name: currentConfig.name.trim(),
-      inputMicId: currentConfig.inputMicId,
-      outputMicId: currentConfig.outputMicId,
-      reduceBackgroundNoise: currentConfig.reduceBackgroundNoise,
-      filterId: currentConfig.filterId
-    }
+    const isDeleted = await deleteMicConfig.mutateAsync(selectedConfigId)
 
-    setSavedConfigs((currentConfigs) =>
-      currentConfigs.map((config) =>
-        config.id === selectedConfig.id ? updatedConfig : config
-      )
-    )
-    setCurrentConfig(createDraftFromConfig(updatedConfig))
+    if (!isDeleted) {
+      // TODO: error popup
+      return
+    }
+    setCurrentConfig(createEmptyDraft())
+    setSelectedConfigId(undefined)
   }
 
   return (
