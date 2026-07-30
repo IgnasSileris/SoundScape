@@ -158,6 +158,7 @@ const MicAndFiltersPage = () => {
             config={currentConfig}
             onConfigChange={handleConfigChange}
             onSave={handleSaveConfig}
+            onDelete={handleDeleteConfig}
           />
         )}
       </div>

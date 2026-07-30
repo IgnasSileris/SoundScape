@@ -11,14 +11,16 @@ export const useMicConfigs = () => {
     queryFn: fetchMicConfigs
   })
 }
-// TODO: False should go into error
+
 export const useSaveMicConfig = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: saveMicConfig,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['saved-mic-configs'] })
+    onSuccess: (isSaved: boolean) => {
+      if (isSaved) {
+        queryClient.invalidateQueries({ queryKey: ['saved-mic-configs'] })
+      }
     }
   })
 }
@@ -28,8 +30,10 @@ export const useDeleteMicConfig = () => {
 
   return useMutation({
     mutationFn: deleteMicConfig,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['saved-mic-configs'] })
+    onSuccess: (isDeleted: boolean) => {
+      if (isDeleted) {
+        queryClient.invalidateQueries({ queryKey: ['saved-mic-configs'] })
+      }
     }
   })
 }

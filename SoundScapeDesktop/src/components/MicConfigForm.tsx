@@ -1,8 +1,9 @@
-import { CircleHelp } from 'lucide-react'
+import { CircleHelp, Trash2Icon } from 'lucide-react'
 import type { FilterOption, MicConfigDraft } from '../types'
 import { DropdownMenu } from './DropdownMenu'
 import { Button } from './ui/button'
 import { useInputMics, useOutputMics } from '../hooks/useDevices'
+import HoverTitle from './HoverTitle'
 
 const FILTER_OPTIONS: FilterOption[] = [
   { id: 'noise-reduction', name: 'Noise Reduction' },
@@ -10,23 +11,25 @@ const FILTER_OPTIONS: FilterOption[] = [
 ]
 
 const EMPTY_FILTER_VALUE = '__no-filter__'
+const EMPTY_INPUT_MICS_VALUE = '__no-input-mics__'
+const EMPTY_OUTPUT_MICS_VALUE = '__no-output-mics__'
 
 type MicConfigFormProps = {
   config: MicConfigDraft
   onConfigChange: (updates: Partial<MicConfigDraft>) => void
   onSave: () => void
+  onDelete: () => void
 }
 
 const InputLabel = ({ label, hint }: { label: string; hint: string }) => {
   return (
     <div className="flex items-center gap-2">
-      <h3 className="text-lg font-light">{label}</h3>
-      <span
-        title={hint}
-        className="inline-flex cursor-help text-slate-400 transition hover:text-slate-200"
-      >
-        <CircleHelp className="h-4 w-4" />
-      </span>
+      <h3 className="text-lg">{label}</h3>
+      <HoverTitle title={hint}>
+        <span className="inline-flex cursor-help text-slate-400 transition hover:text-slate-200">
+          <CircleHelp className="h-4 w-4" />
+        </span>
+      </HoverTitle>
     </div>
   )
 }
@@ -34,7 +37,8 @@ const InputLabel = ({ label, hint }: { label: string; hint: string }) => {
 const MicConfigForm = ({
   config,
   onConfigChange,
-  onSave
+  onSave,
+  onDelete
 }: MicConfigFormProps) => {
   const { data: inputMics = [] } = useInputMics()
   const { data: outputMics = [] } = useOutputMics()
@@ -53,10 +57,21 @@ const MicConfigForm = ({
         />
         <DropdownMenu
           label="Select an input microphone..."
-          options={inputMics.map((option) => ({
-            value: option.id,
-            label: option.name
-          }))}
+          options={
+            inputMics.length === 0
+              ? [
+                  {
+                    value: EMPTY_INPUT_MICS_VALUE,
+                    label: 'No input microphones found',
+                    className: 'font-normal text-white/60',
+                    disabled: true
+                  }
+                ]
+              : inputMics.map((option) => ({
+                  value: option.id,
+                  label: option.name
+                }))
+          }
           currentValue={
             inputMics.find((option) => option.id === config.inputDeviceId)?.id
           }
@@ -71,10 +86,21 @@ const MicConfigForm = ({
         />
         <DropdownMenu
           label="Select an output microphone..."
-          options={outputMics.map((option) => ({
-            value: option.id,
-            label: option.name
-          }))}
+          options={
+            outputMics.length === 0
+              ? [
+                  {
+                    value: EMPTY_OUTPUT_MICS_VALUE,
+                    label: 'No virtual microphones found',
+                    className: 'font-normal text-white/60',
+                    disabled: true
+                  }
+                ]
+              : outputMics.map((option) => ({
+                  value: option.id,
+                  label: option.name
+                }))
+          }
           currentValue={
             outputMics.find((option) => option.id === config.outputDeviceId)?.id
           }
@@ -118,22 +144,28 @@ const MicConfigForm = ({
               reduceBackgroundNoise: event.target.checked
             })
           }
-          className="h-5 w-5 accent-sky-500"
+          className="size-5 accent-sky-500"
         />
         <div className="flex items-center gap-2">
           <span className="text-base font-medium">Reduce background noise</span>
-          <span
-            title="Clean up room tone and low-level background sound."
-            className="inline-flex cursor-help text-slate-400 transition hover:text-slate-200"
-          >
-            <CircleHelp className="h-4 w-4" />
-          </span>
+          <HoverTitle title="Clean up room tone and low-level background sound.">
+            <span className="inline-flex cursor-help text-slate-400 transition hover:text-slate-200">
+              <CircleHelp className="size-4" />
+            </span>
+          </HoverTitle>
         </div>
       </label>
 
-      <div className="flex w-full items-center justify-between gap-4">
-        <div />
-        <div
+      <div className="flex w-full items-center justify-end gap-4">
+        <HoverTitle title="Delete configuration">
+          <Button
+            onClick={onDelete}
+            className="bg-transparent text-slate-300 shadow-none hover:bg-transparent hover:text-red-500"
+          >
+            <Trash2Icon className="size-6" />
+          </Button>
+        </HoverTitle>
+        <HoverTitle
           title={
             isSaveDisabled
               ? 'Name, input microphone, and output microphone are required.'
@@ -147,7 +179,7 @@ const MicConfigForm = ({
           >
             Save configuration
           </Button>
-        </div>
+        </HoverTitle>
       </div>
     </div>
   )

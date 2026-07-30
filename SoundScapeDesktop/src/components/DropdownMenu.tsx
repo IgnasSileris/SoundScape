@@ -4,6 +4,7 @@ type DropdownOption = {
   value: string
   label: string
   className?: string
+  disabled?: boolean
 }
 
 type DropdownProps = {
@@ -41,6 +42,7 @@ export function DropdownMenu({
           <SelectItem
             key={option.value}
             value={option.value}
+            disabled={option.disabled}
             className="border-none bg-slate-900 text-xl font-medium text-white focus:bg-slate-800/30 focus:text-white"
           >
             <span className={option.className}>{option.label}</span>
