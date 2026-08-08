@@ -8,6 +8,8 @@ import {
   useMicConfigs,
   useSaveMicConfig
 } from '../hooks/useConfigurations'
+import ErrorModal from '../components/ErrorModal'
+import ConfirmationModal from '../components/ConfirmationModal'
 
 const NEW_CONFIG_VALUE = 'new'
 
@@ -49,6 +51,11 @@ const MicAndFiltersPage = () => {
 
   const hasActiveConfig = selectedConfigId !== undefined
   const isCreatingNewConfig = selectedConfigId === NEW_CONFIG_VALUE
+
+  const [currentErrorMessage, setCurrentErrorMessage] = useState<
+    string | undefined
+  >(undefined)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
 
   const handleConfigSelection = (value: string) => {
     setSelectedConfigId(value)
@@ -112,7 +119,9 @@ const MicAndFiltersPage = () => {
     const isSaved = await saveMicConfig.mutateAsync(newConfig)
 
     if (!isSaved) {
-      // TODO: error popup
+      setCurrentErrorMessage(
+        'There was an error trying to save the configuration.'
+      )
       return
     }
     setSelectedConfigId(newConfig.id)
@@ -120,7 +129,6 @@ const MicAndFiltersPage = () => {
   }
 
   const handleDeleteConfig = async () => {
-    // TODO: add confirm modal
     if (!selectedConfigId) {
       return
     }
@@ -134,7 +142,9 @@ const MicAndFiltersPage = () => {
     const isDeleted = await deleteMicConfig.mutateAsync(selectedConfigId)
 
     if (!isDeleted) {
-      // TODO: error popup
+      setCurrentErrorMessage(
+        'There was an error trying to delete the configuration.'
+      )
       return
     }
     setCurrentConfig(createEmptyDraft())
@@ -158,7 +168,7 @@ const MicAndFiltersPage = () => {
             config={currentConfig}
             onConfigChange={handleConfigChange}
             onSave={handleSaveConfig}
-            onDelete={handleDeleteConfig}
+            onDelete={() => setIsDeleteModalOpen(true)}
           />
         )}
       </div>
@@ -166,6 +176,20 @@ const MicAndFiltersPage = () => {
       <div className="mt-auto flex w-full items-center justify-center pt-4">
         <Recordbutton />
       </div>
+      <ErrorModal
+        isOpen={currentErrorMessage !== undefined}
+        message={currentErrorMessage ?? ''}
+        onClose={() => setCurrentErrorMessage(undefined)}
+      />
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        message={`Are you sure you want to delete configuration '${currentConfig.name}'?`}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        onConfirm={async () => {
+          await handleDeleteConfig()
+          setIsDeleteModalOpen(false)
+        }}
+      />
     </div>
   )
 }
