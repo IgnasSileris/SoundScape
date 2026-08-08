@@ -1,7 +1,7 @@
 import { Outlet } from '@tanstack/react-router'
 import NavBar from '../components/NavBar'
 
-export default function MainPage() {
+const MainPage = () => {
   return (
     <div className="flex h-screen w-screen">
       <div className="h-full w-72 min-w-72 border border-red-500">
@@ -14,3 +14,5 @@ export default function MainPage() {
     </div>
   )
 }
+
+export default MainPage

@@ -3,7 +3,7 @@ import { Button } from './ui/button'
 import { useMatchRoute, useNavigate } from '@tanstack/react-router'
 import type { AnyRoute } from '@tanstack/react-router'
 
-export default function NavElement({
+const NavElement = ({
   title,
   Icon,
   route
@@ -11,7 +11,7 @@ export default function NavElement({
   title: string
   Icon: React.ElementType
   route: AnyRoute
-}) {
+}) => {
   const navigate = useNavigate()
   const match = useMatchRoute()
 
@@ -34,3 +34,5 @@ export default function NavElement({
     </div>
   )
 }
+
+export default NavElement

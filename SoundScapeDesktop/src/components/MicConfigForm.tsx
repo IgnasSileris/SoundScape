@@ -1,6 +1,6 @@
 import { CircleHelp, Trash2Icon } from 'lucide-react'
 import type { FilterOption, MicConfigDraft } from '../types'
-import { DropdownMenu } from './DropdownMenu'
+import DropdownMenu from './DropdownMenu'
 import { Button } from './ui/button'
 import { useInputMics, useOutputMics } from '../hooks/useDevices'
 import HoverTitle from './HoverTitle'

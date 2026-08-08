@@ -14,12 +14,12 @@ type DropdownProps = {
   onChange: (value: string) => void
 }
 
-export function DropdownMenu({
+const DropdownMenu = ({
   label,
   options,
   currentValue,
   onChange
-}: DropdownProps) {
+}: DropdownProps) => {
   const normalizedOptions = options.map((option) =>
     typeof option === 'string' ? { value: option, label: option } : option
   )
@@ -52,3 +52,5 @@ export function DropdownMenu({
     </Select>
   )
 }
+
+export default DropdownMenu

@@ -2,7 +2,7 @@ import { IconMicrophoneFilled, IconPlayerStopFilled } from '@tabler/icons-react'
 import { Button } from './ui/button'
 import { useState } from 'react'
 
-export default function Recordbutton() {
+const Recordbutton = () => {
   // Current mic and filter selection to be stored in the backend so no need to pass in again
   // might also need to add intermediate processing state (to show that is loading)
   // backend will need to record both the unfiltered and filtered versions.
@@ -39,3 +39,5 @@ export default function Recordbutton() {
     </>
   )
 }
+
+export default Recordbutton

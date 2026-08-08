@@ -16,7 +16,7 @@ import {
   testAndCompareRoute
 } from '../app/router'
 
-export default function NavBar() {
+const NavBar = () => {
   const navSections = [
     {
       name: 'Dashboard',
@@ -53,3 +53,5 @@ export default function NavBar() {
     </div>
   )
 }
+
+export default NavBar
